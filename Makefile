@@ -1,7 +1,15 @@
+NAME := zaim
+SRCS := $(shell find . -type f -name '*.go')
+ARG   = verify
+
+bin/${NAME}: deps $(SRCS)
+	go build -o bin/$(NAME)
+
 .PHONY: clean deps build run test
 
 clean:
-	@rm -fR vendor
+	rm -rf bin/*
+	rm -fR vendor
 
 deps:
 	dep ensure
@@ -9,11 +17,8 @@ deps:
 update:
 	dep ensure -update
 
-build: deps
-	go build
+run-jq: 
+	go run *.go ${ARG} | jq .
 
 run: 
-	go run main.go this is args
-
-test: 
-	go test
+	go run *.go ${ARG}
